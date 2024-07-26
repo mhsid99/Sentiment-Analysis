@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sentiment Analysis</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>Sentiment Analysis</h1>
+        <p>This model has been trained on logistic regression algorithm by using IMDB movie reviews
+            <a href="https://www.kaggle.com/lakshmi25npathi/imdb-dataset-of-50k-movie-reviews">dataset</a>
+        </p>
+        <p>The code for the model can be found 
+            <a href="https://github.com/mhsid99/Sentimental-Analysis-using-Logistic-Regression/blob/master/Sentimenal%20Analysis.ipynb">here</a> 
+        </p>
+
+        <textarea id="review" placeholder="Enter your review here..."></textarea>
+        <button onclick="analyzeSentiment()">Analyze Sentiment</button>
+        <div class="result" id="result"></div>
+    </div>
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>
