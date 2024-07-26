@@ -1,6 +1,6 @@
 #!/bin/bash
 
-echo "This Script is used to stop already running docker container, remove them and remove the image as well"
+echo "This Script is used to stop already running docker container, remove them and remove the image as well alala"
 
 sudo docker stop $(sudo docker ps -q)
 sudo docker rm $(sudo docker ps -a -q)
