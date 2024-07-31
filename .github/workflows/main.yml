@@ -27,10 +27,7 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: sentiment-analysis-artifact
-          path: ./sentiment
-
-      - name: List files in sentiment directory
-        run: ls -la sentiment
+          path: ./
 
    # Deploy Job
   deploy:
@@ -41,7 +38,7 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           name: sentiment-analysis-artifact
-          path: ./sentiment
+          path: ./
 
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v2
