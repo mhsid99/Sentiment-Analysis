@@ -29,6 +29,9 @@ jobs:
           name: sentiment-analysis-artifact
           path: ./sentiment
 
+      - name: List files in sentiment directory
+        run: ls -la sentiment
+
    # Deploy Job
   deploy:
     needs: build
