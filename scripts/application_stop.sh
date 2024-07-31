@@ -1,7 +1,13 @@
 #!/bin/bash
-
-echo "This Script is used to stop already running docker container, remove them and remove the image as well alala"
-
-sudo docker stop $(sudo docker ps -q)
-sudo docker rm $(sudo docker ps -a -q)
-sudo docker rmi $(sudo docker images -q)
+echo "Try 2...."
+# Check if the Docker image exists
+if sudo docker image inspect sentiment-analysis & /dev/null; then
+    # Stop and remove containers based on the image
+    sudo docker stop $(sudo docker ps -a -q --filter ancestor=sentiment-analysis)
+    sudo docker rm $(sudo docker ps -a -q --filter ancestor=sentiment-analysis)
+    
+    # Remove the Docker image
+    sudo docker rmi sentiment-analysis
+else
+    echo "Image sentiment-analysis does not exist, skipping removal."
+fi
