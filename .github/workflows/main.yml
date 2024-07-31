@@ -51,14 +51,9 @@ jobs:
           echo "${{ secrets.EC2_SSH_KEY }}" > ec2-key.pem
           chmod 600 ec2-key.pem
           
-      - name: Add EC2 host key to known_hosts
-        run: |
-          mkdir -p ~/.ssh
-          ssh-keyscan -H ec2-23-20-235-154.compute-1.amazonaws.com >> ~/.ssh/known_hosts
-          
       - name: Copy files to EC2 instance
         run: |
-          scp -i ec2-key.pem -r ./sentiment ubuntu@ec2-23-20-235-154.compute-1.amazonaws.com:/home/ubuntu/sentiment
+          scp -i ec2-key.pem -r ./sentiment ec2-23-20-235-154.compute-1.amazonaws.com:/home/ubuntu/sentiment
 
       - name: SSH into EC2 and Deploy
         run: |
