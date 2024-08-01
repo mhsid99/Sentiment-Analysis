@@ -10,7 +10,7 @@ echo "moving files to app folder"
 sudo mv  * /var/www/sentiment-analysis 
 
 # Navigate to the app directory
-cd /var/www/sentiment-analysis /
+cd /var/www/sentiment-analysis
 sudo mv env .env
 
 sudo apt-get update
