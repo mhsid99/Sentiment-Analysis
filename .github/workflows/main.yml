@@ -47,24 +47,26 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: us-east-1 # Change to your region
           
-      - name: Create SSH key file
-        run: |
-          echo "${{ secrets.EC2_SSH_KEY }}" > ec2-key.pem
-          chmod 600 ec2-key.pem
-          
-      - name: Add EC2 host key to known_hosts
+      - name: Create SSH key file and whitelist IPs
         run: |
           mkdir -p ~/.ssh
-          ssh-keyscan -H ec2-44-211-176-242.compute-1.amazonaws.com >> ~/.ssh/known_hosts
+          echo "${{ secrets.EC2_SSH_KEY }}" >  ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan 44.211.176.242 >> ~/.ssh/known_hosts
+          
+      #- name: Add EC2 host key to known_hosts
+       # run: |
+        #  mkdir -p ~/.ssh
+         # ssh-keyscan -H ec2-44-211-176-242.compute-1.amazonaws.com >> ~/.ssh/known_hosts
 
       - name: Copy files to EC2 instance
         run: |
-          scp -i ec2-key.pem -r ./ ec2-44-211-176-242.compute-1.amazonaws.com:/home/ubuntu/sentiment
+          scp -r * ubuntu@44.211.176.242:/home/ubuntu/
 
       - name: SSH into EC2 and Deploy
         run: |
-          ssh -i ec2-key.pem ubuntu@ec2-44-211-176-242.compute-1.amazonaws.com << 'EOF'
-          cd /home/ubuntu/sentiment
+          ssh -o StrictHostKeyChecking=no ubuntu@44.211.176.242 "chmod +x ./deploy.sh && ./deploy.sh" >>EOF        
+          cd /home/ubuntu/
           # Add commands to set up environment and run your Flask app
           # For example:
           python3 -m venv venv
