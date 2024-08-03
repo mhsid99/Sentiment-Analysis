@@ -66,12 +66,7 @@ jobs:
       - name: SSH into EC2 and Deploy
         run: |
           ssh -o StrictHostKeyChecking=no ubuntu@44.211.176.242 "chmod +x ./deploy.sh && ./deploy.sh"        
-          cd /home/ubuntu/
-          # Add commands to set up environment and run your Flask app
-          # For example:
-          apt install python3.12-venv
-          python3 -m venv venv
-          source venv/bin/activate
-          pip install -r requirements.txt
-          nohup flask run --host=0.0.0.0 --port=5000 &
-          EOF
+          
+      - name: Clean up SSH key 🚀
+        if: always()
+        run: rm -f ~/.ssh/id_rsa
