@@ -20,7 +20,7 @@ sudo apt-get install -y python3 python3-pip python3-venv
 
 # Create a virtual environment
 echo "Creating virtual environment"
-python3 -m venv venv
+sudo python3 -m venv venv
 
 # Activate the virtual environment
 source venv/bin/activate
@@ -63,5 +63,5 @@ sudo rm -rf myapp.sock
 
 # Start Gunicorn with the Flask application
 echo "starting gunicorn"
-gunicorn --workers 3 --bind unix:myapp.sock app:app --user www-data --group www-data --daemon
+sudo venv/bin/gunicorn --workers 3 --bind unix:myapp.sock app:app --user www-data --group www-data --daemon
 echo "started gunicorn 🚀"
