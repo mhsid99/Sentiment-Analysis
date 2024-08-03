@@ -11,7 +11,7 @@ sudo mv  * /var/www/sentiment-analysis
 
 # Navigate to the app directory
 cd /var/www/sentiment-analysis
-#sudo mv env .env
+sudo mv env .env
 
 sudo apt-get update
 echo "installing python and pip"
