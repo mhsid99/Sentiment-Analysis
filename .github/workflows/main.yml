@@ -21,18 +21,13 @@ jobs:
       - name: Install Dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install -r sentiment/requirements.txt
-
-      - name: Run Tests
-        run: |
-          # Here you can run any tests you have. If no tests, you can remove this step.
-          pytest  # Assuming you use pytest for testing. Adjust accordingly.
+          pip install -r requirements.txt
 
       - name: Upload artifact to enable deployment
         uses: actions/upload-artifact@v3
         with:
           name: sentiment-analysis-artifact
-          path: ./sentiment
+          path: ./
 
    # Deploy Job
   deploy:
@@ -43,7 +38,7 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           name: sentiment-analysis-artifact
-          path: ./sentiment
+          path: ./
 
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v2
@@ -51,23 +46,27 @@ jobs:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: us-east-1 # Change to your region
-      - name: Create SSH key file
-        run: |
-          echo "${{ secrets.EC2_SSH_KEY }}" > ec2-key.pem
-          chmod 600 ec2-key.pem
           
+      - name: Create SSH key file and whitelist IPs
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.EC2_SSH_KEY }}" >  ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan 44.211.176.242 >> ~/.ssh/known_hosts
+          
+      #- name: Add EC2 host key to known_hosts
+       # run: |
+        #  mkdir -p ~/.ssh
+         # ssh-keyscan -H ec2-44-211-176-242.compute-1.amazonaws.com >> ~/.ssh/known_hosts
+
       - name: Copy files to EC2 instance
         run: |
-          scp -i ec2-key.pem -r ./sentiment ubuntu@ec2-23-20-235-154.compute-1.amazonaws.com:/home/ubuntu/sentiment
+          scp -r * ubuntu@44.211.176.242:/home/ubuntu/
 
       - name: SSH into EC2 and Deploy
         run: |
-          ssh -i ec2-key.pem ubuntu@ec2-23-20-235-154.compute-1.amazonaws.com << 'EOF'
-          cd /home/ubuntu/sentiment
-          # Add commands to set up environment and run your Flask app
-          # For example:
-          python3 -m venv venv
-          source venv/bin/activate
-          pip install -r requirements.txt
-          nohup flask run --host=0.0.0.0 --port=5000 &
-          EOF
+          ssh -o StrictHostKeyChecking=no ubuntu@44.211.176.242 "chmod +x ./deploy.sh && ./deploy.sh"        
+          
+      - name: Clean up SSH key 🚀
+        if: always()
+        run: rm -f ~/.ssh/id_rsa
