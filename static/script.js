@@ -4,7 +4,7 @@ async function analyzeSentiment() {
         alert("Please enter a review to continue");
         return; // To stop further execution if the review is empty
     }
-    const response = await fetch('http://127.0.0.1:5000/predict', {
+    const response = await fetch('http://44.211.176.242:5000/predict', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
