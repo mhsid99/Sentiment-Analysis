@@ -1,12 +1,12 @@
 #!/bin/bash
 
-echo "deleting old app"
-sudo rm -rf /var/www/
+echo "Deleting old app"
+sudo rm -rf /var/www/sentiment-analysis
 
-echo "creating app folder"
+echo "Creating app folder"
 sudo mkdir -p /var/www/sentiment-analysis 
 
-echo "moving files to app folder"
+echo "Moving files to app folder"
 sudo mv * /var/www/sentiment-analysis 
 
 # Navigate to the app directory
@@ -15,18 +15,18 @@ cd /var/www/sentiment-analysis
 # Update package lists
 sudo apt-get update
 
-echo "installing python and pip"
+echo "Installing python and pip"
 sudo apt-get install -y python3 python3-pip python3-venv
 
 # Create a virtual environment
 echo "Creating virtual environment"
-sudo python3 -m venv venv
+python3 -m venv venv
 
 # Activate the virtual environment
 source venv/bin/activate
 
 # Install application dependencies from requirements.txt
-echo "Install application dependencies from requirements.txt"
+echo "Installing application dependencies from requirements.txt"
 pip install --upgrade pip
 pip install -r requirements.txt
 
@@ -59,9 +59,9 @@ fi
 
 # Stop any existing Gunicorn process
 sudo pkill gunicorn
-sudo rm -rf myapp.sock
+sudo rm -f myapp.sock
 
 # Start Gunicorn with the Flask application
-echo "starting gunicorn"
-sudo venv/bin/gunicorn --workers 3 --bind unix:myapp.sock app:app --user www-data --group www-data --daemon
-echo "started gunicorn 🚀"
+echo "Starting Gunicorn"
+sudo -u www-data /var/www/sentiment-analysis/venv/bin/gunicorn --workers 3 --bind unix:/var/www/sentiment-analysis/myapp.sock app:app --daemon
+echo "Started Gunicorn 🚀"
